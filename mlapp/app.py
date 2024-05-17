@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 #from sklearn.externals import joblib    # Add this line
 
-
+@st.cache_data 
 def get_data():
     # fetch dataset 
     df = fetch_ucirepo(id=545) 
@@ -48,7 +48,7 @@ def use_scaledvalues(input_dict):
     return scaled_values
 
 def get_radar_chart(input_data):
-    st.write("test")
+    
     # Create a list of feature names
     feature_names = list(input_data.keys())
     print("feature_names:", feature_names)
@@ -57,44 +57,68 @@ def get_radar_chart(input_data):
     # Create a radar chart
     fig = go.Figure(data=go.Scatterpolar(r=feature_values, theta=feature_names, fill='toself'))
     # Update the layout of the radar chart
-    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=False,width=800, height=700)
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+        showlegend=False,
+        width=1200, 
+        height=700,
+        font=dict(
+            family="Courier New, monospace",
+            size=15,
+            color="black"
+        )
+    )
     # Display the radar chart
     #st.plotly_chart(fig)
     return fig
 
-def userprediction(input_data):
+
+def add_predictions(input_data):
     # Load the model and scaler
     model = joblib.load('trainmodel/model.pkl')
     scaler = joblib.load('trainmodel/scaler.pkl')
-
-    # Convert input dictionary to DataFrame to maintain feature names
-    feature_df = pd.DataFrame([input_data])  # Convert dict to DataFrame, keys become column names
-        #feature_df = np.array(list(input_data.values())).reshape(1, -1) # Convert dict to DataFrame, keys become column names
-    st.write("feature_df:", feature_df)    
-
-    # Scale the feature values while preserving column names
-    feature_values_scaled = scaler.transform(feature_df)  # DataFrame maintains column names
-
-    # Make a prediction
-    prediction = model.predict(feature_values_scaled)
-
-    st.write("feature_values_scaled:", feature_values_scaled  )
-    st.write(prediction)
-    st.write("The predicted class is:", prediction[0])
-
-    return prediction
+    # Convert input_data values to a 2D array
+    input_array = np.array(list(input_data.values())).reshape(1, -1)
+    #st.write("input_array:", input_array)
+    # Scale the input data with scaler
+    scaled_input = scaler.transform(input_array)
+    #st.write("scaled_input:", scaled_input) 
+    # Make predictions
+  
+    prediction = model.predict(scaled_input)
+    # Display the prediction
     
+    st.write("")
+    st.markdown(f'<h2 style="font-weight: bold;">Prediction: {prediction[0]}</h2>', unsafe_allow_html=True)
+    if prediction[0] == "Cammeo":
+        st.markdown(f'<p style="color:green;">Probability for Cammeo: {model.predict_proba(scaled_input)[0][0]:.2f}**</p>', unsafe_allow_html=True)
+    else:
+        st.markdown(f"Probability for Cammeo: {model.predict_proba(scaled_input)[0][0]:.2f}")
+    if prediction[0] == "Osmancik":
+        st.markdown(f'<p style="color:green;">Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}</p>', unsafe_allow_html=True)
+    else:
+        st.markdown(f"**Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}**")
+    st.write("This app allows you to predict the class of rice grain based on 7 morphological features. \n\n for further explanation see the research paper and project description. \n\n A total of 3810 rice grain's images were taken for the two species, processed and feature inferences were made. \n\n 7 morphological features were obtained for each grain of rice")       
+  
+
 def main():
     st.set_page_config(
         page_title="Class Predictor", 
-        page_icon=   "",
+        page_icon='🌾',
         layout="wide",
         initial_sidebar_state="expanded",
     )
+
+    with open("mlapp/css/style.css") as f: #f for file
+        st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
+
     input_data=sidebar()
     with st.container():
         st.title('Class Predictor')  # Add a title  # Add a title
-        st.write("test")
+        st.write("This application harnesses the power of binary logistic regression to classify rice plants into distinct categories based on seven key features. Through a user-friendly interface, users can input data related to morphologic features . This model processes this information to predict the class with high accuracy.\n\n \n\n \n\n ")
+        st.write("")
+        st.write("")
+        st.write("")
     col1, col2 = st.columns([4,1])
    
     with col1:
@@ -102,7 +126,8 @@ def main():
         st.plotly_chart(radarchart)
 
     with col2:
-        userprediction(input_data)
+      
+        add_predictions(input_data)
   
 
 if __name__ == '__main__':
