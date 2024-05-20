@@ -19,7 +19,7 @@ import joblib
 
 def get_data():
 # Read CSV file
-    df = pd.read_csv('C:/Users/alexi/OneDrive/VAWI/PA2/Classification/data.csv')
+    df = pd.read_csv('data.csv')
     df = df.drop('Perimeter', axis=1)
 
 # Data (as pandas dataframes)

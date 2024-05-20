@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 @st.cache_data 
 def get_data():
     # Read CSV file
-    df = pd.read_csv('C:/Users/alexi/OneDrive/VAWI/PA2/Classification/data.csv')
+    df = pd.read_csv('data.csv')
 
     # Drop the 'perimeter' column
     df = df.drop('Perimeter', axis=1)
@@ -25,7 +25,7 @@ def get_data():
     return df
 
 def sidebar():
-    st.sidebar.header("Class Predictor sidebar")
+    st.sidebar.header("Slide the values")
     data = get_data()
     features = {}
     slider_labels = data.columns[:-1]  # Assumes the last column is the target
@@ -104,7 +104,7 @@ def add_predictions(input_data):
         st.markdown(f'<p style="color:green;">Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}</p>', unsafe_allow_html=True)
     else:
         st.markdown(f"**Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}**")
-    st.write("This app allows you to predict the class of rice grain based on 7 morphological features. \n\n for further explanation see the research paper and project description. \n\n A total of 3810 rice grain's images were taken for the two species, processed and feature inferences were made. \n\n 7 morphological features were obtained for each grain of rice")       
+    st.write("This app allows you to predict the class of rice grain based on 7 morphological features. \n\n Please read the project paper for further explanation. \n\n A total of 3810 rice grain's images were taken for the two species, processed and feature inferences were made. \n\n 7 morphological features were obtained for each grain of rice.")       
   
 
 def main():
