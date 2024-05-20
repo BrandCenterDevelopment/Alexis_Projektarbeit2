@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np  
-from ucimlrepo import fetch_ucirepo
+#from ucimlrepo import fetch_ucirepo
+from scipy.io.arff import loadarff
 import plotly.graph_objects as go
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
@@ -10,12 +11,14 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 
 @st.cache_data 
 def get_data():
-    # fetch dataset 
-    df = fetch_ucirepo(id=545) 
-    # data (as pandas dataframes) 
-    X = df.data.features 
-    y = df.data.targets
-    df = pd.concat([X, y], axis=1)
+# Read CSV file
+    df = pd.read_csv('C:/Users/alexi/OneDrive/VAWI/PA2/Classification/data.csv')
+
+# Data (as pandas dataframes)
+    X = df.drop('Class', axis=1)  # replace 'target_column' with the name of your target column
+    y = df['Class']  # replace 'target_column' with the name of your target column
+
+    print(df.head())
     return df
 
 def sidebar():

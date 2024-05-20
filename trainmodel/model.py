@@ -10,6 +10,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.io.arff import loadarff
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
@@ -17,16 +18,15 @@ from sklearn.metrics import confusion_matrix
 import joblib
 
 def get_data():
-    # fetch dataset 
-    df = fetch_ucirepo(id=545) 
-    # data (as pandas dataframes) 
-    X = df.data.features 
-    y = df.data.targets
-    df = pd.concat([X, y], axis=1)
-    # Write df to a CSV file
-    df.to_csv('data.csv', index=False)
+# Read CSV file
+    df = pd.read_csv('C:/Users/alexi/OneDrive/VAWI/PA2/Classification/data.csv')
+
+# Data (as pandas dataframes)
+    X = df.drop('Class', axis=1)  # replace 'target_column' with the name of your target column
+    y = df['Class']  # replace 'target_column' with the name of your target column
+
     print(df.head())
-    return df 
+    return df
 
 def train_and_predict(df):
     # Split the data into features and target variable
