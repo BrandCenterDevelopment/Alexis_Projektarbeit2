@@ -11,10 +11,13 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 
 @st.cache_data 
 def get_data():
-# Read CSV file
+    # Read CSV file
     df = pd.read_csv('C:/Users/alexi/OneDrive/VAWI/PA2/Classification/data.csv')
 
-# Data (as pandas dataframes)
+    # Drop the 'perimeter' column
+    df = df.drop('Perimeter', axis=1)
+
+    # Data (as pandas dataframes)
     X = df.drop('Class', axis=1)  # replace 'target_column' with the name of your target column
     y = df['Class']  # replace 'target_column' with the name of your target column
 
