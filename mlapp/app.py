@@ -97,13 +97,13 @@ def add_predictions(input_data):
     st.write("")
     st.markdown(f'<h2 style="font-weight: bold;">Prediction: {prediction[0]}</h2>', unsafe_allow_html=True)
     if prediction[0] == "Cammeo":
-        st.markdown(f'<p style="color:green;">Probability for Cammeo: {model.predict_proba(scaled_input)[0][0]:.2f}**</p>', unsafe_allow_html=True)
+        st.markdown(f'<p style="color:green;">Probability for Cammeo: {model.predict_proba(scaled_input)[0][0]:.2f}</p>', unsafe_allow_html=True)
     else:
         st.markdown(f"Probability for Cammeo: {model.predict_proba(scaled_input)[0][0]:.2f}")
     if prediction[0] == "Osmancik":
         st.markdown(f'<p style="color:green;">Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}</p>', unsafe_allow_html=True)
     else:
-        st.markdown(f"**Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}**")
+        st.markdown(f"Probability for Osmancik: {model.predict_proba(scaled_input)[0][1]:.2f}")
     st.write("This app allows you to predict the class of rice grain based on 7 morphological features. \n\n Please read the project paper for further explanation. \n\n A total of 3810 rice grain's images were taken for the two species, processed and feature inferences were made. \n\n 7 morphological features were obtained for each grain of rice.")       
   
 
